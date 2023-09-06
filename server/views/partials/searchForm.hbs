@@ -1,0 +1,106 @@
+<div class="Repository search">
+    <h1 class="w-full font-bold text-center"  text-blue-700 >Data to search</h1>
+    <form class="w-full flex items-center justify-center flex-col" action="/term/:term" method="POST">
+        <div class="form-row my-2">
+            <h2> Term to search: </h2>
+            <input name="term" id="term" type="text"/>
+        </div>
+        <div class="form-row my-2">
+            <h2> From repository create date (YYYY-MM-DD): </h2>
+            <input name="date" id="date" type="text" />
+        </div>
+
+        <button
+                id="btn"
+                class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                type="submit"
+        >
+            Search
+        </button>
+
+    </form>
+    <div class="grid grid-cols-8 text-center"></div>
+
+    <div id="output"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const button = document.querySelector('#btn');
+            button.addEventListener('click' , async (e)=> {
+                e.preventDefault();
+                const term = document.querySelector('#term').value;
+                const date = document.querySelector('#date').value;
+
+                try{
+                    const response = await fetch(`/term`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify( { term, date } )
+                    });
+
+                    console.log("STATUS:" + response.status)
+
+                    window.location.replace(response.status === 200 ? `/result` : '/error');
+
+                    /*const { stats , data } = json;
+
+                    const node = document.createElement("div");
+                    node.classList.add("grid", "grid-cols-8");
+                    node.innerHTML = `
+                            <div>
+                                <div class="mx-2"> ID <div/>
+                                <div class="mx-2"> Repository </div>
+                                <div class="mx-2"> Page </div>
+                                <div class="mx-2"> Created </div>
+                                <div class="mx-2"> Stars </div>
+                                <div class="mx-2"> Forks <div/>
+                                <div class="mx-2"> Subs </div>
+                                <div class="mx-2"> Network Count </div>
+                            </div>
+
+                    `;
+
+                    document.querySelector("#output").append(node);
+
+                    data.forEach( (e,idx)=> {
+                        const node = document.createElement("div");
+                        node.classList.add("grid", "grid-cols-8")
+                        node.innerHTML = `
+                                <div class="text-center"> ${idx}</div>               <div> ${ e.Repository }       </div> <div> ${ e.Page }</div>
+                                <div> ${ e.Created} </div>       <div> ${ e.Stars } </div>     <div> ${ e.Forks } </div>
+                                <div> ${ e.Subscribers } </div>  <div> ${ e.Network_count } </div>
+                        `;
+                        document.querySelector("#output").append(node);
+                    } )*/
+                    // console.log(data)
+                    // const queryString = Object.entries(data)
+                    //         .flatMap(([key, value]) => {
+                    //             if (typeof value === 'object' && value !== null) {
+                    //                 return Object.entries(value).map(([subKey, subValue]) =>
+                    //                         `${encodeURIComponent(key)}[${encodeURIComponent(subKey)}]=${encodeURIComponent(subValue)}`
+                    //                 );
+                    //             } else {
+                    //                 return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                    //             }
+                    //         })
+                    //         .join('&');
+                    //
+                    //
+                    // const response = await fetch(`/term?${searchParams.toString()}`);
+                    // window.location.replace(`/result?${queryString}`)
+
+
+                } catch (err) {
+                    console.log(err);
+                    alert("Error Occurred while submitting form, Try Later ... ");
+                    setTimeout( ()=> { location.reload(); }, 2000 );
+                }
+
+
+
+            })
+        })
+    </script>
+</div>
